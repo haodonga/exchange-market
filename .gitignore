@@ -1,0 +1,16 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Runtime data stays on each developer's machine
+exchange-market/data/
+exchange-market/uploads/
+
+# Dependencies, logs and operating system files
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
