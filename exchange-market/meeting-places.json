@@ -1,0 +1,90 @@
+[
+  {
+    "id": "auckland-domain",
+    "name": "Pukekawa / Auckland Domain",
+    "nameZh": "奥克兰 Domain 公园",
+    "area": "central",
+    "address": "20 Park Road, Grafton, Auckland",
+    "meetingPointZh": "建议在 Wintergarden（冬季花园）入口外的公共步道会面；双方先通过留言确认具体位置。",
+    "meetingPointEn": "The public path outside the Wintergarden entrance. Confirm the exact spot together in messages.",
+    "sourceUrl": "https://www.aucklandcouncil.govt.nz/en/parks-recreation/find-park-beach/park-detail/126.html",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Pukekawa%20%2F%20Auckland%20Domain%2C%2020%20Park%20Road%2C%20Grafton%2C%20Auckland%2C%20New%20Zealand"
+  },
+  {
+    "id": "aotea-square",
+    "name": "Aotea Square / Aotea – Te Papa Tū Wātea",
+    "nameZh": "Aotea 广场",
+    "area": "central",
+    "address": "291-297 Queen Street, Auckland",
+    "meetingPointZh": "建议在 Queen Street 一侧的广场入口处会面；双方先通过留言确认具体位置，并避开活动围挡。",
+    "meetingPointEn": "The Queen Street edge of the square. Confirm the exact spot together in messages and keep clear of any event barriers.",
+    "sourceUrl": "https://www.aucklandlive.co.nz/venue/aotea-square",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Aotea%20Square%20%2F%20Aotea%20%E2%80%93%20Te%20Papa%20T%C5%AB%20W%C4%81tea%2C%20291-297%20Queen%20Street%2C%20Auckland%2C%20New%20Zealand"
+  },
+  {
+    "id": "takapuna-beach-reserve",
+    "name": "Takapuna Beach Reserve",
+    "nameZh": "塔卡普纳海滩公园",
+    "area": "north",
+    "address": "37 The Strand, Takapuna, Auckland",
+    "meetingPointZh": "建议在 The Strand 海滩入口附近、游乐场外的公共步道会面；双方先通过留言确认具体位置。",
+    "meetingPointEn": "The public path outside the playground near The Strand beach access. Confirm the exact spot together in messages.",
+    "sourceUrl": "https://www.aucklandcouncil.govt.nz/en/parks-recreation/find-park-beach/park-detail/450.html",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Takapuna%20Beach%20Reserve%2C%2037%20The%20Strand%2C%20Takapuna%2C%20Auckland%2C%20New%20Zealand"
+  },
+  {
+    "id": "onepoto-domain",
+    "name": "Onepoto Domain",
+    "nameZh": "Onepoto 公园",
+    "area": "north",
+    "address": "24 Tarahanga Street, Northcote, Auckland",
+    "meetingPointZh": "建议在 Tarahanga Street 入口附近的公园公共步道会面，避开车行道；双方先通过留言确认具体位置。",
+    "meetingPointEn": "The public park path near the Tarahanga Street entrance, clear of the driveway. Confirm the exact spot together in messages.",
+    "sourceUrl": "https://www.aucklandcouncil.govt.nz/en/parks-recreation/find-park-beach/park-detail/424.html",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Onepoto%20Domain%2C%2024%20Tarahanga%20Street%2C%20Northcote%2C%20Auckland%2C%20New%20Zealand"
+  },
+  {
+    "id": "lloyd-elsmore-park",
+    "name": "Lloyd Elsmore Park",
+    "nameZh": "Lloyd Elsmore 公园",
+    "area": "east",
+    "address": "2R Bells Road, Pakuranga Heights, Auckland",
+    "meetingPointZh": "建议在园内泳池与休闲中心附近的公共步道会面；双方先通过留言确认具体入口和位置。",
+    "meetingPointEn": "The public path near the park's pool and leisure centre. Confirm the entrance and exact spot together in messages.",
+    "sourceUrl": "https://www.aucklandcouncil.govt.nz/en/parks-recreation/find-park-beach/park-detail/281.html",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Lloyd%20Elsmore%20Park%2C%202R%20Bells%20Road%2C%20Pakuranga%20Heights%2C%20Auckland%2C%20New%20Zealand"
+  },
+  {
+    "id": "henderson-park",
+    "name": "Henderson Park",
+    "nameZh": "亨德森公园",
+    "area": "west",
+    "address": "41A Wilsher Crescent, Henderson, Auckland",
+    "meetingPointZh": "建议在 Wilsher Crescent 停车场旁的公共步道会面，避开车行道；双方先通过留言确认具体位置。",
+    "meetingPointEn": "The public path beside the Wilsher Crescent car park, clear of vehicle lanes. Confirm the exact spot together in messages.",
+    "sourceUrl": "https://www.aucklandcouncil.govt.nz/en/parks-recreation/find-park-beach/park-detail/635.html",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Henderson%20Park%2C%2041A%20Wilsher%20Crescent%2C%20Henderson%2C%20Auckland%2C%20New%20Zealand"
+  },
+  {
+    "id": "hayman-park",
+    "name": "Manu-kau Noa Iho / Hayman Park",
+    "nameZh": "海曼公园",
+    "area": "south",
+    "address": "15R Davies Avenue, Manukau, Auckland",
+    "meetingPointZh": "建议在 Davies Avenue 一侧、游乐场外的公共步道会面；双方先通过留言确认具体位置。",
+    "meetingPointEn": "The public path outside the playground on the Davies Avenue side. Confirm the exact spot together in messages.",
+    "sourceUrl": "https://www.aucklandcouncil.govt.nz/en/parks-recreation/find-park-beach/park-detail/406.html",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Manu-kau%20Noa%20Iho%20%2F%20Hayman%20Park%2C%2015R%20Davies%20Avenue%2C%20Manukau%2C%20Auckland%2C%20New%20Zealand"
+  },
+  {
+    "id": "auckland-botanic-gardens",
+    "name": "Auckland Botanic Gardens",
+    "nameZh": "奥克兰植物园",
+    "area": "south",
+    "address": "102 Hill Road, Manurewa, Auckland 2105",
+    "meetingPointZh": "建议在 Huakaiwaka 游客中心入口外会面；双方先通过留言确认具体位置，并查看官网当日开放信息。",
+    "meetingPointEn": "Outside the Huakaiwaka visitor centre entrance. Confirm the exact spot together in messages and check current access information on the official website.",
+    "sourceUrl": "https://www.aucklandbotanicgardens.co.nz/contact/",
+    "mapUrl": "https://www.google.com/maps/search/?api=1&query=Auckland%20Botanic%20Gardens%2C%20102%20Hill%20Road%2C%20Manurewa%2C%20Auckland%202105%2C%20New%20Zealand"
+  }
+]

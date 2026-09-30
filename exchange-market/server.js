@@ -12,9 +12,11 @@ const path = require('path');
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT || 4173);
-const DATA_DIR = path.join(ROOT, 'data');
+const HOST = process.env.HOST || '127.0.0.1';
+const DATA_DIR = process.env.SWAPBOOK_DATA_DIR ? path.resolve(process.env.SWAPBOOK_DATA_DIR) : path.join(ROOT, 'data');
 const UPLOAD_DIR = path.join(ROOT, 'uploads');
 const DATABASE_FILE = path.join(DATA_DIR, 'database.json');
+const MEETING_PLACES_FILE = path.join(ROOT, 'meeting-places.json');
 const MAX_BODY_BYTES = 4 * 1024 * 1024;
 const SESSION_DAYS = 14;
 
@@ -47,17 +49,7 @@ function passwordMatches(password, record) {
 function seedDatabase() {
   const mia = { id: 'u_7a5ac1a2d9520f1c40e7', name: 'Mia', email: 'mia@swap.local', password: passwordRecord('mia123'), joinedAt: '2026-09-01T09:00:00.000Z' };
   const ken = { id: 'u_01e7d3e28701b1ec0a13', name: 'Ken', email: 'ken@swap.local', password: passwordRecord('ken123'), joinedAt: '2026-09-03T09:00:00.000Z' };
-  const items = [
-    ['i_5d5c0c2a0944a2f6c147', mia.id, '富士一次成像相机', '数码', '九成新', '一直放在防潮箱，附相纸两盒。', 420, '📷', 'pink'],
-    ['i_f2c8eb7efc2264a87dab', ken.id, '胡桃木阅读椅', '家居', '轻微使用痕迹', '小户型也合适，坐感很舒服。', 680, '🪑', 'orange'],
-    ['i_4b2f4bac9491e2209770', mia.id, '《观念的水位》', '书籍', '近全新', '读过一次，内页干净无划线。', 36, '📚', 'purple'],
-    ['i_1d6fd16d5641fca5f537', ken.id, '阔叶绿植与水泥花盆', '植物', '状态很好', '搬家无法带走，适合窗边。', 85, '🪴', 'mint'],
-    ['i_70e1e305b9219b3efc18', mia.id, '降噪头戴耳机', '数码', '八成新', '功能正常，附收纳包和充电线。', 560, '🎧', 'blue'],
-    ['i_3cbf9338e19f1be9f487', ken.id, '深蓝工装外套', '服饰', '九成新', 'L 码，质感厚实，适合秋冬。', 180, '🧥', 'coral']
-  ].map(([itemId, ownerId, title, category, condition, description, price, emoji, color], index) => ({ id: itemId, ownerId, title, category, condition, description, price, emoji, color, imageUrl: [
-    '/assets/product-camera-real.png', '/assets/product-chair-real.png', '/assets/product-book-real.png',
-    '/assets/product-plant-real.png', '/assets/product-headphones-real.png', '/assets/product-jacket-real.png'
-  ][index], createdAt: now() - (index + 1) * 3600000, active: true }));
+  const items = [];
   return { users: [mia, ken], items, offers: [], sessions: [] };
 }
 
@@ -71,6 +63,7 @@ async function ensureDatabase() {
 }
 
 let db;
+let meetingPlaces = [];
 let writeQueue = Promise.resolve();
 function persist() {
   const snapshot = JSON.stringify(db, null, 2);
@@ -106,8 +99,21 @@ async function readJson(request) {
 }
 function findItem(itemId) { return db.items.find(item => item.id === itemId && item.active); }
 function itemView(item) { return { ...item, owner: publicUser(db.users.find(user => user.id === item.ownerId)) }; }
+function handoverView(offer) {
+  const stored = offer.handover && typeof offer.handover === 'object' && !Array.isArray(offer.handover) ? offer.handover : {};
+  const participants = [offer.ownerId, offer.proposerId];
+  return {
+    ...stored,
+    placeId: typeof stored.placeId === 'string' ? stored.placeId : null,
+    revision: Number.isSafeInteger(stored.revision) && stored.revision >= 0 ? stored.revision : 0,
+    proposedBy: participants.includes(stored.proposedBy) ? stored.proposedBy : null,
+    confirmedBy: Array.isArray(stored.confirmedBy) ? [...new Set(stored.confirmedBy.filter(userId => participants.includes(userId)))] : [],
+    updatedAt: Number.isFinite(stored.updatedAt) ? stored.updatedAt : null,
+    messages: Array.isArray(stored.messages) ? stored.messages : []
+  };
+}
 function offerView(offer) {
-  return { ...offer, targetItem: itemView(db.items.find(item => item.id === offer.targetItemId) || { title: '已下架物品', ownerId: offer.ownerId }), offeredItem: offer.offeredItemId ? itemView(db.items.find(item => item.id === offer.offeredItemId) || { title: '已下架物品', ownerId: offer.proposerId }) : null, proposer: publicUser(db.users.find(user => user.id === offer.proposerId)) };
+  return { ...offer, handover: handoverView(offer), targetItem: itemView(db.items.find(item => item.id === offer.targetItemId) || { title: '已下架物品', ownerId: offer.ownerId }), offeredItem: offer.offeredItemId ? itemView(db.items.find(item => item.id === offer.offeredItemId) || { title: '已下架物品', ownerId: offer.proposerId }) : null, proposer: publicUser(db.users.find(user => user.id === offer.proposerId)) };
 }
 function validImagePath(value) { return !value || (/^\/uploads\/[a-z0-9_-]+\.(png|jpg|webp|gif)$/.test(value)); }
 
@@ -115,6 +121,7 @@ async function handleApi(request, response, url) {
   const pathname = url.pathname;
   const user = currentUser(request);
   if (request.method === 'GET' && pathname === '/api/session') return sendJson(response, 200, { user: publicUser(user) });
+  if (request.method === 'GET' && pathname === '/api/meeting-places') return sendJson(response, 200, { places: meetingPlaces });
   if (request.method === 'POST' && pathname === '/api/auth/register') {
     const body = await readJson(request); const name = cleanText(body.name, 24); const email = cleanText(body.email, 120).toLowerCase(); const password = String(body.password || '');
     if (name.length < 2) return sendError(response, 400, '昵称至少需要 2 个字符。');
@@ -170,10 +177,58 @@ async function handleApi(request, response, url) {
     else { const amount = Number(body.cashAmount); if (!Number.isFinite(amount) || amount <= 0 || amount > 100000000) return sendError(response, 400, '请输入合理的现金报价。'); offer.cashAmount = Math.round(amount); }
     db.offers.push(offer); await persist(); return sendJson(response, 201, { offer: offerView(offer) });
   }
+  const offerMessages = /^\/api\/offers\/([^/]+)\/messages$/.exec(pathname);
+  const offerHandover = /^\/api\/offers\/([^/]+)\/handover$/.exec(pathname);
+  if ((request.method === 'POST' && offerMessages) || (request.method === 'PATCH' && offerHandover)) {
+    const body = await readJson(request);
+    // Resolve and validate the latest state after reading the body. No await occurs
+    // between the revision check and the mutation, so simultaneous proposals cannot
+    // overwrite an intervening proposal or confirm a superseded location.
+    const offerId = (offerMessages || offerHandover)[1];
+    const offer = db.offers.find(entry => entry.id === offerId);
+    if (!offer) return sendError(response, 404, '找不到这条请求。');
+    if (offer.ownerId !== user.id && offer.proposerId !== user.id) return sendError(response, 403, '只有交易双方可以协商地点和留言。');
+    if (offer.status !== 'accepted') return sendError(response, 409, '接受请求后才能协商交易地点和留言。');
+    const handover = handoverView(offer);
+    if (offerMessages) {
+      if (!body || typeof body.text !== 'string') return sendError(response, 400, '留言内容必须是文字。');
+      const messageText = body.text.trim();
+      if (!messageText) return sendError(response, 400, '请先填写留言内容。');
+      if ([...messageText].length > 500) return sendError(response, 400, '留言不能超过 500 个字符。');
+      const timestamp = now();
+      handover.messages.push({ id: id('m'), senderId: user.id, kind: 'message', text: messageText, createdAt: timestamp });
+      handover.updatedAt = timestamp;
+    } else {
+      if (!body || !['propose', 'confirm'].includes(body.action)) return sendError(response, 400, '地点操作不正确。');
+      if (!Number.isSafeInteger(body.revision) || body.revision < 0) return sendError(response, 400, '地点版本不正确，请刷新后重试。');
+      if (body.revision !== handover.revision) return sendError(response, 409, '交易地点已更新，请查看最新地点后重试。');
+      if (body.action === 'propose') {
+        if (typeof body.placeId !== 'string' || !meetingPlaces.some(place => place.id === body.placeId)) return sendError(response, 400, '请选择平台指定的交易地点。');
+        const timestamp = now();
+        handover.placeId = body.placeId;
+        handover.revision += 1;
+        handover.proposedBy = user.id;
+        handover.confirmedBy = [user.id];
+        handover.updatedAt = timestamp;
+        handover.messages.push({ id: id('m'), senderId: user.id, kind: 'place-proposed', text: '', placeId: handover.placeId, revision: handover.revision, createdAt: timestamp });
+      } else {
+        if (!handover.placeId) return sendError(response, 409, '请先提议一个交易地点。');
+        if (handover.confirmedBy.includes(user.id)) return sendJson(response, 200, { offer: offerView(offer) });
+        const timestamp = now();
+        handover.confirmedBy.push(user.id);
+        handover.updatedAt = timestamp;
+        handover.messages.push({ id: id('m'), senderId: user.id, kind: 'place-confirmed', text: '', placeId: handover.placeId, revision: handover.revision, createdAt: timestamp });
+      }
+    }
+    offer.handover = handover;
+    await persist();
+    return sendJson(response, 200, { offer: offerView(offer) });
+  }
   const offerAction = /^\/api\/offers\/([^/]+)$/.exec(pathname);
   if (request.method === 'PATCH' && offerAction) {
+    const body = await readJson(request);
     const offer = db.offers.find(entry => entry.id === offerAction[1]); if (!offer) return sendError(response, 404, '找不到这条请求。'); if (offer.ownerId !== user.id) return sendError(response, 403, '只有物主可以回应这条请求。'); if (offer.status !== 'pending') return sendError(response, 409, '这条请求已被处理。');
-    const body = await readJson(request); if (!['accepted', 'declined'].includes(body.status)) return sendError(response, 400, '只能同意或拒绝请求。');
+    if (!body || !['accepted', 'declined'].includes(body.status)) return sendError(response, 400, '只能同意或拒绝请求。');
     offer.status = body.status; offer.respondedAt = now(); await persist(); return sendJson(response, 200, { offer: offerView(offer) });
   }
   return sendError(response, 404, '接口不存在。');
@@ -181,6 +236,7 @@ async function handleApi(request, response, url) {
 
 async function staticFile(request, response, url) {
   const relativePath = url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname).replace(/^\/+/, '');
+  if (!['index.html', 'app.js', 'i18n.js', 'style.css'].includes(relativePath) && !/^(assets|uploads)\/[a-zA-Z0-9_-]+\.(png|jpg|jpeg|webp|gif|svg|ico)$/.test(relativePath)) return sendError(response, 404, '页面不存在。');
   const resolved = path.resolve(ROOT, relativePath);
   if (!resolved.startsWith(ROOT + path.sep) && resolved !== path.join(ROOT, 'index.html')) return sendError(response, 403, '禁止访问。');
   try { const body = await fsp.readFile(resolved); response.writeHead(200, { 'Content-Type': MIME[path.extname(resolved).toLowerCase()] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff' }); response.end(body); }
@@ -189,11 +245,13 @@ async function staticFile(request, response, url) {
 
 async function main() {
   db = await ensureDatabase();
+  meetingPlaces = JSON.parse(await fsp.readFile(MEETING_PLACES_FILE, 'utf8'));
+  if (!Array.isArray(meetingPlaces) || meetingPlaces.some(place => !place || typeof place.id !== 'string' || !place.id || typeof place.name !== 'string') || new Set(meetingPlaces.map(place => place.id)).size !== meetingPlaces.length) throw new Error('交易地点配置不正确。');
   http.createServer(async (request, response) => {
     const url = new URL(request.url, `http://${request.headers.host || '127.0.0.1'}`);
     try { if (url.pathname.startsWith('/api/')) await handleApi(request, response, url); else await staticFile(request, response, url); }
     catch (error) { console.error(error); if (!response.headersSent) sendError(response, 500, error.message || '服务器暂时无法处理请求。'); else response.end(); }
-  }).listen(PORT, '127.0.0.1', () => console.log(`Swapbook full-stack app: http://127.0.0.1:${PORT}`));
+  }).listen(PORT, HOST, () => console.log(`Swapbook full-stack app: http://${HOST}:${PORT}`));
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });

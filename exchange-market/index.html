@@ -3,14 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="一个本地运行的二手物品交换市场" />
-    <title>换物记 · 交换你真正需要的</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%231a365d'/%3E%3Cpath d='M15 26h24l-6-7m16 19H25l6 7' fill='none' stroke='%23f4bf57' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+    <meta name="description" content="NZswap：让闲置好物在新西兰社区继续流转。发布物品、提出交换，在奥克兰的指定公共地点相约交接。" />
+    <title>NZswap · 交换你真正需要的</title>
+    <link rel="icon" type="image/png" href="/assets/swapbook-logo.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <main id="app"></main>
+    <main id="app"><div class="app-loading" role="status">正在连接 NZswap… / Connecting to NZswap…</div></main>
+    <noscript>请开启 JavaScript 使用 NZswap。Please enable JavaScript to use NZswap.</noscript>
     <div id="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <script src="i18n.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
