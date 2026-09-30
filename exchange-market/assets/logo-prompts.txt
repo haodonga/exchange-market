@@ -1,0 +1,18 @@
+NZswap logo
+Originally generated under the Swapbook / 换物记 name; the original prompts are preserved below.
+Tool: built-in image_gen (the interface does not expose a selectable model).
+Final asset: swapbook-logo.png; genuine transparent alpha preserved.
+Current wordmark: live NZswap text; Georgia italic in both interface languages.
+
+Initial generation prompt:
+Use case: logo-brand.
+Asset type: production-ready standalone icon for the header, login page, footer and favicon of a bilingual community swapping website named 换物记 / Swapbook.
+Primary request: design one distinctive, friendly, elegant exchange emblem. Two soft, organically curved arrows gently interlock into an open rounded circular loop, suggesting neighbours sharing and everyday objects finding a new life. The arrows have generous rounded bodies and subtly leaf-like tips; make the exchange direction unambiguous. Warm, natural and quietly playful, with the clarity of a carefully drawn editorial brand mark.
+Style: strictly flat 2D illustration, smooth expressive curves, confident clean near-black outlines, minimal vector-friendly silhouette. Refined rather than a generic circular-recycle glyph. No words or letters: the website will set the wordmark separately in live typography.
+Palette: flat warm cream #f9f5f2 and soft sage #b5c995, restrained butter-yellow #f4ed36 accent, outline ink #1a1a1a. Must remain clear on dusk-violet #8584bd and cream surfaces.
+Composition: single large centred emblem, square canvas, occupy around 86 percent of the canvas, evenly balanced compact shape with only a small transparent margin. Strokes thick enough and shapes simple enough to read at 44px.
+Background: genuinely transparent alpha, no coloured backing disc or rectangle.
+Avoid: photography, gradients, shadows, texture, gloss, 3D, mockup, lettering, watermark, extra small decorative objects, hairline details, sharp mechanical arrow corners.
+
+Final refinement prompt:
+Use case: precise-object-edit / logo-brand. Edit the supplied logo. Keep its exact two interlocking rounded exchange arrows, two small leaf motifs, silhouette, proportions, transparent alpha, compact square composition and near-black outlines. Change ONLY the colour treatment: make the interior of every shape a perfectly uniform solid flat colour. Upper-right arrow pure warm cream #f9f5f2, lower-left arrow pure sage #b5c995, both leaf inserts pure yellow #f4ed36, outlines pure ink #1a1a1a. Absolutely remove all shading, gradients, tonal variation, rim lighting, texture and shadows. A clean flat 2D editorial logo with large simple colour regions. Preserve truly transparent background. No text, no backing plate, no watermark.
